@@ -1,0 +1,261 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on January 13, 2015 by texi2html 1.82
+texi2html was written by: 
+            Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+-->
+<head>
+<title>vasm manual: 14. PowerPC cpu module</title>
+
+<meta name="description" content="vasm manual: 14. PowerPC cpu module">
+<meta name="keywords" content="vasm manual: 14. PowerPC cpu module">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.82">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.smallquotation {font-size: smaller}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="vasm_12.html#m68k-cpu-module" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="vasm_14.html#c16x_002fst10-cpu-module" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="vasm_0.html#General-9" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="vasm_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[Index]</td>
+<td valign="middle" align="left">[<a href="vasm_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+
+<hr size="2">
+<a name="PowerPC-cpu-module"></a>
+<a name="PowerPC-cpu-module-1"></a>
+<h1 class="chapter">14. PowerPC cpu module</h1>
+<p>This chapter documents the Backend for the PowerPC microprocessor family.
+</p>
+<hr size="6">
+<a name="Legal-6"></a>
+<h2 class="section">14.1 Legal</h2>
+
+<p>    This module is written in 2002-2006,2008,2011 by Frank Wille.
+</p>
+<p>    This archive may be redistributed without modifications and used
+    for non-commercial purposes.
+</p>
+<p>    Distributing modified versions and commercial usage needs my written
+    consent.
+</p>
+<p>    Certain modules may fall under additional copyrights.
+</p>
+
+<hr size="6">
+<a name="Additional-options-for-this-module"></a>
+<h2 class="section">14.2 Additional options for this module</h2>
+
+<p>This module provides the following additional options:
+</p>
+<dl compact="compact">
+<dt> &lsquo;<samp>-big</samp>&rsquo;</dt>
+<dd><p>        Select big-endian mode.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-little</samp>&rsquo;</dt>
+<dd><p>        Select little-endian mode.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-m601</samp>&rsquo;</dt>
+<dd><p>        Generate code for the 601.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-many</samp>&rsquo;</dt>
+<dd><p>        Allow any PPC instruction.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-mavec, -maltivec</samp>&rsquo;</dt>
+<dd><p>        Generate code for the Altivec unit.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-mcom</samp>&rsquo;</dt>
+<dd><p>        Allow only common PPC instructions.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-mppc32, -mppc -m403, -m405, -m603, -m604, -m750, -m860</samp>&rsquo;</dt>
+<dd><p>        Generate code for the 32-bit PowerPC family.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-mppc64, -m620</samp>&rsquo;</dt>
+<dd><p>        Generate code for the 64-bit PowerPC family.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-mpwr</samp>&rsquo;</dt>
+<dd><p>        Generate code for the POWER family.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-mpwrx, -mpwr2</samp>&rsquo;</dt>
+<dd><p>        Generate code for the POWER2 family.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-no-regnames</samp>&rsquo;</dt>
+<dd><p>        Don&rsquo;t predefine any register-name symbols.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-opt-branch</samp>&rsquo;</dt>
+<dd><p>        Enables &rsquo;optimization&rsquo; of 16-bit branches into
+        &quot;B&lt;!cc&gt; $+8 ; B label&quot; sequences when necessary.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-sd2reg=&lt;n&gt;</samp>&rsquo;</dt>
+<dd><p>        Sets the 2nd small data base register to <code>Rn</code>.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-sdreg=&lt;n&gt;</samp>&rsquo;</dt>
+<dd><p>        Sets small data base register to <code>Rn</code>.
+</p>
+</dd>
+</dl>
+
+<hr size="6">
+<a name="General-6"></a>
+<h2 class="section">14.3 General</h2>
+
+<p>This backend accepts PowerPC instructions as described in the
+instruction set manuals from IBM and Motorola (e.g. the PowerPC
+Programming Environments).
+</p>
+<p>The full instruction set of the following families is supported:
+POWER, POWER2, 40x, 60x, 620, 750, 74xx (including Altivec), 860.
+</p>
+<p>The target address type is 32bit.
+</p>
+<p>Default alignment for sections and instructions is 4 bytes. Data is
+aligned to its natural alignment by default.
+</p>
+<hr size="6">
+<a name="Extensions-3"></a>
+<h2 class="section">14.4 Extensions</h2>
+
+<p>This backend provides the following specific extensions:
+</p>
+<ul class="toc">
+<li>- When not disabled by the option <code>-no-regnames</code>, the registers r0 - r31,
+ f0 - f31, v0 - v31, cr0 - cr7, vrsave, sp, rtoc, fp, fpscr, xer, lr, ctr,
+ and the symbols lt, gt, so and un will be predefined on startup and may
+ be referenced by the program.
+
+</li></ul>
+
+<p>This backend extends the selected syntax module by the following
+directives:
+</p>
+<dl compact="compact">
+<dt> <code>.sdreg &lt;n&gt;</code></dt>
+<dd><p> Sets the small data base register to <code>Rn</code>.
+</p>
+</dd>
+<dt> <code>.sd2reg &lt;n&gt;</code></dt>
+<dd><p> Sets the 2nd small data base register to <code>Rn</code>.
+</p>
+</dd>
+</dl>
+
+
+<hr size="6">
+<a name="Optimizations-4"></a>
+<h2 class="section">14.5 Optimizations</h2>
+
+<p>This backend performs the following optimizations:
+</p>
+<ul class="toc">
+<li>- 16-bit branches, where the destination is out of range, are translated
+ into <code>B&lt;!cc&gt; $+8</code> and a 26-bit unconditional branch.
+
+</li></ul>
+
+<hr size="6">
+<a name="Known-Problems-14"></a>
+<h2 class="section">14.6 Known Problems</h2>
+
+<p>    Some known problems of this module at the moment:
+</p>
+<ul class="toc">
+<li>- No real differantiation between 403, 750, 860 instructions
+      at the moment.
+</li><li>- New instructions from modern CPUs are still missing.
+
+</li></ul>
+
+<hr size="6">
+<a name="Error-Messages-12"></a>
+<h2 class="section">14.7 Error Messages</h2>
+
+<p>This module has the following error messages:
+</p>
+<ul class="toc">
+<li>- 2002: instruction not supported on selected architecture
+</li><li>- 2003: constant integer expression required
+</li><li>- 2004: trailing garbage in operand
+</li><li>- 2005: illegal operand type
+</li><li>- 2006: missing closing parenthesis in load/store addressing mode
+</li><li>- 2007: relocation does not allow hi/lo modifier
+</li><li>- 2008: multiple relocation attributes
+</li><li>- 2009: multiple hi/lo modifiers
+</li><li>- 2010: data size %d not supported
+</li><li>- 2012: relocation attribute not supported by operand
+</li><li>- 2013: operand out of range: %ld (allowed: %ld to %ld)
+</li><li>- 2014: not a valid register (0-31)
+</li><li>- 2015: missing base register in load/store addressing mode
+</li><li>- 2016: missing mandatory operand
+</li><li>- 2017: ignoring fake operand
+</li></ul>
+
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#PowerPC-cpu-module" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="vasm_14.html#c16x_002fst10-cpu-module" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="vasm_0.html#General-9" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="vasm_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[Index]</td>
+<td valign="middle" align="left">[<a href="vasm_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Luis Panadero Guardeño</em> on <em>January 13, 2015</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.82</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

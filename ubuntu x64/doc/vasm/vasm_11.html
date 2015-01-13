@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on January 13, 2015 by texi2html 1.82
+texi2html was written by: 
+            Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+-->
+<head>
+<title>vasm manual: 12. Amiga output module</title>
+
+<meta name="description" content="vasm manual: 12. Amiga output module">
+<meta name="keywords" content="vasm manual: 12. Amiga output module">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.82">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.smallquotation {font-size: smaller}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="vasm_10.html#vobj-output-module" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="vasm_12.html#m68k-cpu-module" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="vasm_0.html#General-9" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="vasm_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[Index]</td>
+<td valign="middle" align="left">[<a href="vasm_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+
+<hr size="2">
+<a name="Amiga-output-module"></a>
+<a name="Amiga-output-module-1"></a>
+<h1 class="chapter">12. Amiga output module</h1>
+<p>This chapter describes the AmigaOS hunk-format output module which can be
+selected with the &lsquo;<samp>-Fhunk</samp>&rsquo; option to generate objects and with the
+&lsquo;<samp>-Fhunkexe</samp>&rsquo; option to generate executable files.
+</p>
+<hr size="6">
+<a name="Legal-18"></a>
+<h2 class="section">12.1 Legal</h2>
+
+<p>    This module is copyright in 2002-2014 by Frank Wille.
+</p>
+<p>    This archive may be redistributed without modifications and used
+    for non-commercial purposes.
+</p>
+<p>    Distributing modified versions and commercial usage needs my written
+    consent.
+</p>
+<p>    Certain modules may fall under additional copyrights.
+</p>
+<hr size="6">
+<a name="Additional-options-for-this-version-6"></a>
+<h2 class="section">12.2 Additional options for this version</h2>
+<dl compact="compact">
+<dt> &lsquo;<samp>-kick1hunks</samp>&rsquo;</dt>
+<dd><p>        Use only those hunk types and external reference types which have
+        been valid at the time of Kickstart 1.x for compatibility with
+        old assembler sources and old linkers. For example: no longer
+        differentiate between absolute and relative references.
+    </p></dd>
+<dt> &lsquo;<samp>-linedebug</samp>&rsquo;</dt>
+<dd><p>        Automatically generate an SAS/C-compatible LINE DEBUG hunk for
+        the input source. Overrides any line debugging directives from
+        the source.
+</p></dd>
+</dl>
+
+<p>These options are valid for the <code>hunkexe</code> module only:
+</p><dl compact="compact">
+<dt> &lsquo;<samp>-databss</samp>&rsquo;</dt>
+<dd><p>        Try to shorten sections in the output file by removing zero words
+        without relocation from the end. This technique is only supported
+        by AmigaOS 2.0 and higher.
+</p></dd>
+</dl>
+
+<hr size="6">
+<a name="General-15"></a>
+<h2 class="section">12.3 General</h2>
+
+<p>This output module outputs the <code>hunk</code> object (standard for <code>M68k</code>
+and extended for <code>PowerPC</code>) and <code>hunkexe</code> executable format, which
+is a proprietary file format used by AmigaOS and WarpOS.
+</p>
+<p>The <code>hunkexe</code> module will generate directly executable files, without
+the need for another linker run. But you have to make sure that there are
+no undefined symbols, common symbols, or unusual relocations (e.g. small
+data) left.
+</p>
+<p>It is allowed to define sections with the same name but different
+attributes. They will be regarded as different entities.
+</p>
+
+<hr size="6">
+<a name="Restrictions-1"></a>
+<h2 class="section">12.4 Restrictions</h2>
+
+<p>The <code>hunk</code>/<code>hunkexe</code> output format is only intended for <code>M68k</code>
+and <code>PowerPC</code> cpu modules and will abort when used otherwise.
+</p>
+<p>The <code>hunk</code> module supports the following relocation types:
+</p>
+<ul class="toc">
+<li>- absolute, 32-bit
+
+</li><li>- absolute, 16-bit
+
+</li><li>- absolute, 8-bit
+
+</li><li>- relative, 8-bit
+
+</li><li>- relative, 14-bit (mask 0xfffc) for PPC branch instructions.
+
+</li><li>- relative, 16-bit
+
+</li><li>- relative, 24-bit (mask 0x3fffffc) for PPC branch instructions.
+
+</li><li>- relative, 32-bit
+
+</li><li>- base-relative, 16-bit
+
+</li><li>- common symbols are supported as 32-bit absolute and relative
+      references
+
+</li></ul>
+
+<p>The <code>hunkexe</code> module supports absolute 32-bit relocations only.
+</p>
+<hr size="6">
+<a name="Known-Problems-5"></a>
+<h2 class="section">12.5 Known Problems</h2>
+
+<p>    Some known problems of this module at the moment:
+</p>
+<ul class="toc">
+<li>- The <code>hunkexe</code> module won&rsquo;t process common symbols and allocate
+them in a <code>BSS</code> section. Use a real linker for that.
+
+</li></ul>
+
+<hr size="6">
+<a name="Error-Messages-13"></a>
+<h2 class="section">12.6 Error Messages</h2>
+
+<p>This module has the following error messages:
+</p>
+<ul class="toc">
+<li>- 3001: multiple sections not supported by this format
+</li><li>- 3002: output module doesn&rsquo;t support cpu &lt;name&gt;
+</li><li>- 3003: write error
+</li><li>- 3004: section attributes &lt;attr&gt; not suppported
+</li><li>- 3005: reloc type &lt;m&gt;, size &lt;n&gt;, mask &lt;mask&gt; (symbol &lt;sym&gt; + &lt;offset&gt;) not supported
+</li><li>- 3006: reloc type &lt;n&gt; not supported
+</li><li>- 3009: undefined symbol &lt;%s&gt; at %s+0x%lx, reloc type %d
+</li><li>- 3010: section &lt;%s&gt;: alignment padding (%lu) not a multiple of %lu at 0x%llx
+</li></ul>
+
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#Amiga-output-module" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="vasm_12.html#m68k-cpu-module" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="vasm_0.html#General-9" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="vasm_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[Index]</td>
+<td valign="middle" align="left">[<a href="vasm_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Luis Panadero Guardeño</em> on <em>January 13, 2015</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.82</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

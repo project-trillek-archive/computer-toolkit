@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on January 13, 2015 by texi2html 1.82
+texi2html was written by: 
+            Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+-->
+<head>
+<title>vasm manual: 10. TOS output module</title>
+
+<meta name="description" content="vasm manual: 10. TOS output module">
+<meta name="keywords" content="vasm manual: 10. TOS output module">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.82">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.smallquotation {font-size: smaller}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="vasm_8.html#a_002eout-output-module" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="vasm_10.html#vobj-output-module" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="vasm_0.html#General-9" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="vasm_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[Index]</td>
+<td valign="middle" align="left">[<a href="vasm_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+
+<hr size="2">
+<a name="TOS-output-module"></a>
+<a name="TOS-output-module-1"></a>
+<h1 class="chapter">10. TOS output module</h1>
+<p>This chapter describes the TOS output module which can be
+selected with the &lsquo;<samp>-Ftos</samp>&rsquo; option.
+</p>
+<hr size="6">
+<a name="Legal"></a>
+<h2 class="section">10.1 Legal</h2>
+
+<p>    This module is copyright in 2009-2014 by Frank Wille.
+</p>
+<p>    This archive may be redistributed without modifications and used
+    for non-commercial purposes.
+</p>
+<p>    Distributing modified versions and commercial usage needs my written
+    consent.
+</p>
+<p>    Certain modules may fall under additional copyrights.
+</p>
+<hr size="6">
+<a name="Additional-options-for-this-version-8"></a>
+<h2 class="section">10.2 Additional options for this version</h2>
+ 
+<dl compact="compact">
+<dt> &lsquo;<samp>-monst</samp>&rsquo;</dt>
+<dd><p>        Write Devpac &quot;MonST&quot;-compatible symbols.
+    </p></dd>
+<dt> &lsquo;<samp>-tos-flags=&lt;flags&gt;</samp>&rsquo;</dt>
+<dd><p>        Sets the flags field in the TOS file header. Defaults to 0.
+        Overwrites a TOS flags definition in the assembler source.
+</p></dd>
+</dl>
+
+<hr size="6">
+<a name="General-10"></a>
+<h2 class="section">10.3 General</h2>
+
+<p>This module outputs the TOS executable file format, which is used
+on Atari 16/32-bit computers with 68000 up to 68060 CPU. The symbol
+table uses the DRI format.
+</p>
+<hr size="6">
+<a name="Restrictions-3"></a>
+<h2 class="section">10.4 Restrictions</h2>
+
+<ul class="toc">
+<li>- All symbols must be defined, otherwise the generation of the executable
+  fails. Unknown symbols are listed by vasm.
+</li><li>- The only relocations allowed in this format are 32-bit absolute.
+</li></ul>
+<p>Those are restrictions of the output format, not of vasm.
+</p>
+<hr size="6">
+<a name="Known-Problems-6"></a>
+<h2 class="section">10.5 Known Problems</h2>
+
+<p>    Some known problems of this module at the moment:
+</p>
+<ul class="toc">
+<li>- None.
+</li></ul>
+
+<hr size="6">
+<a name="Error-Messages-20"></a>
+<h2 class="section">10.6 Error Messages</h2>
+
+<p>This module has the following error messages:
+</p>
+<ul class="toc">
+<li>- 3004: section attributes &lt;attr&gt; not suppported
+</li><li>- 3005: reloc type %d, size %d, mask 0x%lx (symbol %s + 0x%lx) not supported
+</li><li>- 3006: reloc type %d not supported
+</li><li>- 3007: undefined symbol &lt;%s&gt;
+</li><li>- 3008: output module doesn&rsquo;t allow multiple sections of the same type
+</li><li>- 3010: section &lt;%s&gt;: alignment padding (%lu) not a multiple of %lu at 0x%llx
+</li></ul>
+
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#TOS-output-module" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="vasm_10.html#vobj-output-module" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="vasm_0.html#General-9" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="vasm_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[Index]</td>
+<td valign="middle" align="left">[<a href="vasm_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Luis Panadero Guardeño</em> on <em>January 13, 2015</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.82</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

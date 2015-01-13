@@ -1,0 +1,284 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on January 13, 2015 by texi2html 1.82
+texi2html was written by: 
+            Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+-->
+<head>
+<title>vasm manual: 18. 80x86 cpu module</title>
+
+<meta name="description" content="vasm manual: 18. 80x86 cpu module">
+<meta name="keywords" content="vasm manual: 18. 80x86 cpu module">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.82">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.smallquotation {font-size: smaller}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="vasm_16.html#ARM-cpu-module" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="vasm_18.html#z80-cpu-module" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="vasm_0.html#General-9" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="vasm_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[Index]</td>
+<td valign="middle" align="left">[<a href="vasm_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+
+<hr size="2">
+<a name="g_t80x86-cpu-module"></a>
+<a name="g_t80x86-cpu-module-1"></a>
+<h1 class="chapter">18. 80x86 cpu module</h1>
+<p>This chapter documents the Backend for the 80x86 microprocessor family.
+</p>
+<hr size="6">
+<a name="Legal-4"></a>
+<h2 class="section">18.1 Legal</h2>
+
+<p>    This module is written in 2005-2006,2011 by Frank Wille.
+</p>
+<p>    This archive may be redistributed without modifications and used
+    for non-commercial purposes.
+</p>
+<p>    Distributing modified versions and commercial usage needs my written
+    consent.
+</p>
+<p>    Certain modules may fall under additional copyrights.
+</p>
+
+<hr size="6">
+<a name="Additional-options-for-this-module-6"></a>
+<h2 class="section">18.2 Additional options for this module</h2>
+
+<p>This module provides the following additional options:
+</p>
+<dl compact="compact">
+<dt> &lsquo;<samp>-cpudebug=&lt;n&gt;</samp>&rsquo;</dt>
+<dd><p>        Enables debugging output.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-m8086</samp>&rsquo;</dt>
+<dd><p>        Generate code for the 8086 CPU.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-mi186</samp>&rsquo;</dt>
+<dd><p>        Generate code for the 80186 CPU.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-mi286</samp>&rsquo;</dt>
+<dd><p>        Generate code for the 80286 CPU.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-mi386</samp>&rsquo;</dt>
+<dd><p>        Generate code for the 80386 CPU.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-mi486</samp>&rsquo;</dt>
+<dd><p>        Generate code for the 80486 CPU.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-mi586</samp>&rsquo;</dt>
+<dd><p>        Generate code for the Pentium.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-mi686</samp>&rsquo;</dt>
+<dd><p>        Generate code for the PentiumPro.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-mpentium</samp>&rsquo;</dt>
+<dd><p>        Generate code for the Pentium.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-mpentiumpro</samp>&rsquo;</dt>
+<dd><p>        Generate code for the PentiumPro.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-mk6</samp>&rsquo;</dt>
+<dd><p>        Generate code for the AMD K6.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-mathlon</samp>&rsquo;</dt>
+<dd><p>        Generate code for the AMD Athlon.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-msledgehammer</samp>&rsquo;</dt>
+<dd><p>        Generate code for the Sledgehammer CPU.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-m64</samp>&rsquo;</dt>
+<dd><p>        Generate code for 64-bit architectures (x86_64).
+</p>
+</dd>
+</dl>
+
+<hr size="6">
+<a name="General-14"></a>
+<h2 class="section">18.3 General</h2>
+
+<p>This backend accepts 80x86 instructions as described in the
+Intel Architecture Software Developer&rsquo;s Manual.
+</p>
+<p>The target address type is 32bit.
+</p>
+<p>Default alignment for sections is 4 bytes. Instructions do not need
+any alignment. Data is aligned to its natural alignment by default.
+</p>
+<p>The backend uses MIT-syntax! This means the left operands are always the
+source and the right operand is the destination. Also register names have to
+be prefixed by a &rsquo;%&rsquo;. Operation size is indicated by a &rsquo;b&rsquo;, &rsquo;w&rsquo;, &rsquo;l&rsquo;, etc.
+suffix behind the mnemonic.
+</p>
+<hr size="6">
+<a name="Extensions-6"></a>
+<h2 class="section">18.4 Extensions</h2>
+
+<p>Predefined register symbols in this backend:
+</p>
+<ul class="toc">
+<li>- 8-bit registers: <code>al cl dl bl ah ch dh bh axl cxl dxl spl bpl sil dil r8b r9b r10b r11b r12b r13b r14b r15b</code>
+</li><li>- 16-bit registers: <code>ax cx dx bx sp bp si di r8w r9w r10w r11w r12w r13w r14w r15w</code>
+</li><li>- 32-bit registers: <code>eax ecx edx ebx esp ebp esi edi r8d r9d r10d r11d r12d r13d r14d r15d</code>
+</li><li>- 64-bit registers: <code>rax rcx rdx rbx rsp ebp rsi rdi r8 r9 r10 r11 r12 r13 r14 r15</code>
+</li><li>- segment registers: <code>es cs ss ds fs gs</code>
+</li><li>- control registers: <code>cr0 cr1 cr2 cr3 cr4 cr5 cr6 cr7 cr8 cr9 cr10 cr11 cr12 cr13 cr14 cr15</code>
+</li><li>- debug registers: <code>dr0 dr1 dr2 dr3 dr4 dr5 dr6 dr7 dr8 dr9 dr10 dr11 dr12 dr13 dr14 dr15</code>
+</li><li>- test registers: <code>tr0 tr1 tr2 tr3 tr4 tr5 tr6 tr7</code>
+</li><li>- MMX and SIMD registers: <code>mm0 mm1 mm2 mm3 mm4 mm5 mm6 mm7 xmm0 xmm1 xmm2 xmm3 xmm4 xmm5 xmm6 xmm7 xmm8 xmm9 xmm10 xmm11 xmm12 xmm13 xmm14 xmm15</code>
+</li><li>- FPU registers: <code>st st(0) st(1) st(2) st(3) st(4) st(5) st(6) st(7)</code>
+</li></ul>
+
+<p>This backend extends the selected syntax module by the following
+directives:
+</p>
+<dl compact="compact">
+<dt> <code>.code16</code></dt>
+<dd><p> Sets the assembler into 16-bit addressing mode.
+</p>
+</dd>
+<dt> <code>.code32</code></dt>
+<dd><p> Sets the assembler into 32-bit addressing mode, which is the default.
+</p>
+</dd>
+<dt> <code>.code64</code></dt>
+<dd><p> Sets the assembler into 64-bit addressing mode.
+</p>
+</dd>
+</dl>
+
+
+<hr size="6">
+<a name="Optimizations-1"></a>
+<h2 class="section">18.5 Optimizations</h2>
+
+<p>This backend performs the following optimizations:
+</p>
+<ul class="toc">
+<li>- Immediate operands are optimized to the smallest size which can
+ still represent the absolute value.
+
+</li><li>- Displacement operands are optimized to the smallest size which
+ can still represent the absolute value.
+
+</li><li>- Jump instructions are optimized to 8-bit displacements, when possible.
+
+</li></ul>
+
+<hr size="6">
+<a name="Known-Problems-3"></a>
+<h2 class="section">18.6 Known Problems</h2>
+
+<p>    Some known problems of this module at the moment:
+</p>
+<ul class="toc">
+<li>- 64-bit operations are incomplete and experimental.
+
+</li></ul>
+
+<hr size="6">
+<a name="Error-Messages-1"></a>
+<h2 class="section">18.7 Error Messages</h2>
+
+<p>This module has the following error messages:
+</p>
+<ul class="toc">
+<li>- 2001: instruction not supported on selected architecture
+</li><li>- 2002: trailing garbage in operand
+</li><li>- 2003: same type of prefix used twice
+</li><li>- 2004: immediate operand illegal with absolute jump
+</li><li>- 2005: base register expected
+</li><li>- 2006: scale factor without index register
+</li><li>- 2007: missing &rsquo;)&rsquo; in baseindex addressing mode
+</li><li>- 2008: redundant %s prefix ignored
+</li><li>- 2009: unknown register specified
+</li><li>- 2010: using register %%%s instead of %%%s due to &rsquo;%c&rsquo; suffix
+</li><li>- 2011: %%%s not allowed with &rsquo;%c&rsquo; suffix
+</li><li>- 2012: illegal suffix &rsquo;%c&rsquo;
+</li><li>- 2013: instruction has no suffix and no register operands - size is unknown
+</li><li>- 2015: memory operand expected
+</li><li>- 2016: you cannot pop %%%s
+</li><li>- 2017: translating to %s %%%s,%%%s
+</li><li>- 2018: translating to %s %%%s
+</li><li>- 2019: absolute scale factor required
+</li><li>- 2020: illegal scale factor (valid: 1,2,4,8)
+</li><li>- 2021: data objects with %d bits size are not supported
+</li><li>- 2022: need at least %d bits for a relocatable symbol
+</li><li>- 2023: pc-relative jump destination out of range (%lld)
+</li><li>- 2024: instruction doesn&rsquo;t support these operand sizes
+</li><li>- 2025: cannot determine immediate operand size without a suffix
+</li><li>- 2026: displacement doesn&rsquo;t fit into %d bits
+
+</li></ul>
+
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#g_t80x86-cpu-module" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="vasm_18.html#z80-cpu-module" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="vasm_0.html#General-9" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="vasm_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[Index]</td>
+<td valign="middle" align="left">[<a href="vasm_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Luis Panadero Guardeño</em> on <em>January 13, 2015</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.82</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

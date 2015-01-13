@@ -1,0 +1,692 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on January 13, 2015 by texi2html 1.82
+texi2html was written by: 
+            Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+-->
+<head>
+<title>vasm manual: 3. Standard Syntax Module</title>
+
+<meta name="description" content="vasm manual: 3. Standard Syntax Module">
+<meta name="keywords" content="vasm manual: 3. Standard Syntax Module">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.82">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.smallquotation {font-size: smaller}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="vasm_1.html#The-Assembler" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="vasm_3.html#Mot-Syntax-Module" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="vasm_0.html#General-9" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="vasm_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[Index]</td>
+<td valign="middle" align="left">[<a href="vasm_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+
+<hr size="2">
+<a name="Standard-Syntax-Module"></a>
+<a name="Standard-Syntax-Module-1"></a>
+<h1 class="chapter">3. Standard Syntax Module</h1>
+<p>This chapter describes the standard syntax module which is available
+with the extension <code>std</code>.
+</p>
+<hr size="6">
+<a name="Legal-2"></a>
+<h2 class="section">3.1 Legal</h2>
+
+<p>    This module is copyright in 2002-2014 by Volker Barthelmann.
+</p>
+<p>    This archive may be redistributed without modifications and used
+    for non-commercial purposes.
+</p>
+<p>    Distributing modified versions and commercial usage needs my written
+    consent.
+</p>
+<p>    Certain modules may fall under additional copyrights.
+</p>
+<hr size="6">
+<a name="Additional-options-for-this-version-3"></a>
+<h2 class="section">3.2 Additional options for this version</h2>
+ 
+<p>This syntax module provides the following additional options:
+</p> 
+<dl compact="compact">
+<dt> &lsquo;<samp>-ac</samp>&rsquo;</dt>
+<dd><p> Immediately allocate common symbols in .bss/.sbss section and
+ define them as externally visible.
+</p></dd>
+<dt> &lsquo;<samp>-nodotneeded</samp>&rsquo;</dt>
+<dd><p> Recognize assembly directives without a leading dot (<code>.</code>).
+</p></dd>
+<dt> &lsquo;<samp>-noesc</samp>&rsquo;</dt>
+<dd><p> Ignore escape character sequences in string constants.
+</p></dd>
+<dt> &lsquo;<samp>-sdlimit=&lt;n&gt;</samp>&rsquo;</dt>
+<dd><p> Put data up to a maximum size of n bytes into the small-data
+ sections. Default is n=0, which means the function is disabled.
+</p>
+</dd>
+</dl>
+
+<hr size="6">
+<a name="General-Syntax-1"></a>
+<h2 class="section">3.3 General Syntax</h2>
+
+<p>Labels have to be terminated with a colon (<code>:</code>).
+Local labels are preceded by &rsquo;<code>.</code>&rsquo; and have to contain digits only.
+Local labels are valid between two global label definitions.
+</p>
+<p>Make sure that you don&rsquo;t define a label on the same line as a
+directive for conditional assembly (if, else, endif)! This is not supported.
+</p>
+<p>The operands are separated from the mnemonic by whitespace.
+Multiple operands are separated by comma (<code>,</code>).
+</p>
+<p>Comments are introduced by the comment character <code>#</code>. The rest
+of the line will be ignored. For the c16x, m68k, 650x, ARM, Z80, 6800
+and Jaguar-RISC backends, the comment character is <code>;</code>
+instead of <code>#</code>, although <code>#</code> is still allowed when being the
+first non-blank character on a line.
+</p>
+<p>Example:
+</p>
+<p><code>mylabel:  inst.q1.q2 op1,op2,op3  # comment</code>
+</p>
+<p>In expressions, numbers starting with <code>0x</code> or <code>0X</code> are
+hexadecimal (e.g. <code>0xfb2c</code>). <code>0b</code> or <code>0B</code> introduces
+binary numbers (e.g. <code>0b1100101</code>). Other numbers starting with
+<code>0</code> are assumed to be octal numbers, e.g. <code>0237</code>. All
+numbers starting with a non-zero digit are decimal, e.g. <code>1239</code>.
+</p>
+<p>C-like escape characters in string constants are allowed by default,
+unless disabled by &lsquo;<samp>-noesc</samp>&rsquo;.
+</p>
+<hr size="6">
+<a name="Directives-2"></a>
+<h2 class="section">3.4 Directives</h2>
+
+<p>The following directives are supported by this syntax module (if the
+CPU- and output-module allow it):
+</p>
+<dl compact="compact">
+<dt> <code>.2byte &lt;exp1&gt;[,&lt;exp2&gt;...]</code></dt>
+<dd><p> See <code>.uahalf</code>.
+</p>
+</dd>
+<dt> <code>.4byte &lt;exp1&gt;[,&lt;exp2&gt;...]</code></dt>
+<dd><p>See <code>.uaword</code>. 
+</p>
+</dd>
+<dt> <code>.8byte &lt;exp1&gt;[,&lt;exp2&gt;...]</code></dt>
+<dd><p>See <code>.uaquad</code>. 
+</p>
+</dd>
+<dt> <code>.ascii &lt;exp1&gt;[,&lt;exp2&gt;,&quot;&lt;string1&gt;&quot;...]</code></dt>
+<dd><p>See <code>.byte</code>. 
+</p>
+</dd>
+<dt> <code>.abort &lt;message&gt;</code></dt>
+<dd><p>      Print an error and stop assembly immediately.
+</p>
+</dd>
+<dt>  <code>.asciiz &quot;&lt;string1&gt;&quot;[,&quot;&lt;string2&gt;&quot;...]</code></dt>
+<dd><p>See <code>.string</code>.    
+</p>
+</dd>
+<dt> <code>.align &lt;bitorbyte_count&gt;[,&lt;fill&gt;][,&lt;maxpad&gt;]</code></dt>
+<dd><p>      Depending on the current CPU backend <code>.align</code> either behaves
+      like <code>.balign</code> (x86) or like <code>.p2align</code> (PPC).
+</p>
+</dd>
+<dt> <code>.balign &lt;byte_count&gt;[,&lt;fill&gt;][,&lt;maxpad&gt;]</code></dt>
+<dd><p>      Insert as much fill bytes as required to reach an address which
+      is dividable by &lt;byte_count&gt;. For example <code>.balign 2</code> would
+      make an alignment to the next 16-bit boundary.
+      The padding bytes are initialized by &lt;fill&gt;, when given. The optional
+      third argument defines a maximum number of padding bytes to use. When
+      more are needed then the alignment is not done at all.
+</p>
+</dd>
+<dt> <code>.balignl &lt;bit_count&gt;[,&lt;fill&gt;][,&lt;maxpad&gt;]</code></dt>
+<dd><p>      Works like <code>.balign</code>, with the only difference that the optional
+      fill value can be specified as a 32-bit word. Padding locations which
+      are not already 32-bit aligned, will cause a warning and padded by
+      zero-bytes.
+</p>
+</dd>
+<dt> <code>.balignw &lt;bit_count&gt;[,&lt;fill&gt;][,&lt;maxpad&gt;]</code></dt>
+<dd><p>      Works like <code>.balign</code>, with the only difference that the optional
+      fill value can be specified as a 16-bit word. Padding locations which
+      are not already 16-bit aligned, will cause a warning and padded by
+      zero-bytes.
+</p>
+</dd>
+<dt> <code>.byte &lt;exp1&gt;[,&lt;exp2&gt;,&quot;&lt;string1&gt;&quot;...]</code></dt>
+<dd><p>      Assign the integer or string constant operands into successive
+      bytes of memory in the current section. Any combination of integer
+      and character string constant operands is permitted.
+</p>
+</dd>
+<dt> <code>.comm &lt;symbol&gt;,&lt;size&gt;[,&lt;align&gt;]</code></dt>
+<dd><p>      Defines a common symbol which has a size of &lt;size&gt; bytes. The
+      final size and alignment will be assigned by the linker, which
+      will use the highest size and alignment values of all common
+      symbols with the same name found. A common symbol is allocated
+      in the .bss section in the final executable. &quot;.comm&quot;-areas of
+      less than 8 bytes in size are aligned to word boundaries, other-
+      wise to doubleword boundaries.
+</p>
+</dd>
+<dt> <code>.endm</code></dt>
+<dd><p>        Ends a macro definition.
+</p>
+</dd>
+<dt> <code>.endr</code></dt>
+<dd><p>        Ends a repetition block.
+</p>
+</dd>
+<dt> <code>.equ &lt;symbol&gt;,&lt;expression&gt;</code></dt>
+<dd><p>        See <code>.set</code>.
+</p>
+</dd>
+<dt> <code>.err &lt;message&gt;</code></dt>
+<dd><p>      Print a user error message. Do not create an output file.
+</p>
+</dd>
+<dt> <code>.extern  &lt;symbol&gt;[,&lt;symbol&gt;...]</code></dt>
+<dd><p>        See <code>.global</code>.
+</p>
+</dd>
+<dt> <code>.fail &lt;expression&gt;</code></dt>
+<dd><p>      Cause a warning when &lt;expresion&gt; is greater or equal 500. Otherwise
+      cause an error.
+</p>
+</dd>
+<dt> <code>.file &quot;string&quot;</code></dt>
+<dd><p>      Set the filename of the input source. This may be used by some
+      output modules. By default, the input filename passed on the
+      command line is used.
+</p>
+</dd>
+<dt> <code>.global &lt;symbol&gt;[,&lt;symbol&gt;...]</code></dt>
+<dd><p>      Flag &lt;symbol&gt; as an external symbol, which means that &lt;symbol&gt; is
+      visible to all modules in the linking process. It may be either
+      defined or undefined.   
+</p>
+</dd>
+<dt> <code>.globl &lt;symbol&gt;[,&lt;symbol&gt;...]</code></dt>
+<dd><p>      See <code>.global</code>.
+</p>
+</dd>
+<dt> <code>.half &lt;exp1&gt;[,&lt;exp2&gt;...]</code></dt>
+<dd><p>      If the current section location counter is not on a halfword
+      boundary, advance it to the next halfword boundary. Then, assign
+      the values of the operands into successive halfwords of memory in
+      the current section.
+</p>
+</dd>
+<dt> <code>.if &lt;expression&gt;</code></dt>
+<dd><p>      Conditionally assemble the following lines if &lt;expression&gt; is non-zero.
+</p>
+</dd>
+<dt> <code>.ifeq &lt;expression&gt;</code></dt>
+<dd><p>      Conditionally assemble the following lines if &lt;expression&gt; is zero.
+</p>
+</dd>
+<dt> <code>.ifne &lt;expression&gt;</code></dt>
+<dd><p>      Conditionally assemble the following lines if &lt;expression&gt; is non-zero.
+</p>
+</dd>
+<dt> <code>.ifgt &lt;expression&gt;</code></dt>
+<dd><p>      Conditionally assemble the following lines if &lt;expression&gt; is
+      greater than zero.
+</p>
+</dd>
+<dt> <code>.ifge &lt;expression&gt;</code></dt>
+<dd><p>      Conditionally assemble the following lines if &lt;expression&gt; is
+      greater than zero or equal.
+</p>
+</dd>
+<dt> <code>.iflt &lt;expression&gt;</code></dt>
+<dd><p>      Conditionally assemble the following lines if &lt;expression&gt; is
+      less than zero.
+</p>
+</dd>
+<dt> <code>.ifle &lt;expression&gt;</code></dt>
+<dd><p>      Conditionally assemble the following lines if &lt;expression&gt; is
+      less than zero or equal.
+</p>
+</dd>
+<dt> <code>.ifb &lt;operand&gt;</code></dt>
+<dd><p>      Conditionally assemble the following lines when &lt;operand&gt; is
+      completely blank, except an optional comment.
+</p>
+</dd>
+<dt> <code>.ifnb &lt;operand&gt;</code></dt>
+<dd><p>      Conditionally assemble the following lines when &lt;operand&gt; is
+      non-blank.
+</p>
+</dd>
+<dt> <code>.ifdef &lt;symbol&gt;</code></dt>
+<dd><p>      Conditionally assemble the following lines if &lt;symbol&gt; is defined.
+</p>
+</dd>
+<dt> <code>.ifndef &lt;symbol&gt;</code></dt>
+<dd><p>      Conditionally assemble the following lines if &lt;symbol&gt; is undefined.
+</p>
+</dd>
+<dt> <code>.incbin &lt;file&gt;</code></dt>
+<dd><p>      Inserts the binary contents of &lt;file&gt; into the object code at
+      this position. The file will be searched first in the current
+      directory, then in all paths defined by &lsquo;<samp>-I</samp>&rsquo; or
+      <code>.incdir</code> in the order of occurence.
+</p>
+</dd>
+<dt> <code>.incdir &lt;path&gt;</code></dt>
+<dd><p>      Add another path to search for include files to the list of
+      known paths. Paths defined with &lsquo;<samp>-I</samp>&rsquo; on the command line are
+      searched first.
+</p>
+</dd>
+<dt> <code>.include &lt;file&gt;</code></dt>
+<dd><p>      Include source text of &lt;file&gt; at this position. The include file
+      will be searched first in the current directory, then in all
+      paths defined by &lsquo;<samp>-I</samp>&rsquo; or <code>.incdir</code> in the order of
+      occurence.
+</p>
+</dd>
+<dt> <code>.int &lt;exp1&gt;[,&lt;exp2&gt;...]</code></dt>
+<dd><p>      See <code>.word</code>.
+</p>
+</dd>
+<dt> <code>.lcomm &lt;symbol&gt;,&lt;size&gt;[,&lt;alignment&gt;]</code> </dt>
+<dd><p>      Allocate &lt;size&gt; bytes of space in the .bss section and assign
+      the value to that location to &lt;symbol&gt;. If &lt;alignment&gt; is given,
+      then the space will be aligned to an address having &lt;alignment&gt;
+      low zero bits or 2, whichever is greater.
+      &lt;symbol&gt; may be made globally visible by the .globl directive.
+</p>
+</dd>
+<dt> <code>.list</code></dt>
+<dd><p>      The following lines will appear in the listing file, if it was
+      requested.
+</p>
+</dd>
+<dt> <code>.local &lt;symbol&gt;[,&lt;symbol&gt;...]</code></dt>
+<dd><p>      Flag &lt;symbol&gt; as a local symbol, which means that &lt;symbol&gt; is
+      local for the current file and invisible to other modules in
+      the linking process.
+</p>
+</dd>
+<dt> <code>.long &lt;exp1&gt;[,&lt;exp2&gt;...]</code></dt>
+<dd><p>      See <code>.word</code>.
+</p>
+</dd>
+<dt> <code>.macro &lt;name&gt; [&lt;arguments&gt;...]</code></dt>
+<dd><p>      Defines a macro which can be referenced by &lt;name&gt;. The macro
+      definition is closed by an <code>.endm</code> directive. When calling
+      a macro you may pass up to 9 arguments, separated by comma. Those
+      arguments are referenced within the macro context as <code>\1</code> to
+      <code>\9</code>, or optionally by named arguments, which may be specified
+      after the &lt;name&gt;, separated by commas.
+      Argument <code>\0</code> is set to the macro&rsquo;s first qualifier
+      (mnemonic extension), when given.
+      The special argument <code>\@</code> inserts a unique id,
+      useful for defining labels.
+      <code>\()</code> may be used as a separator between the name of a macro
+      argument and the subsequent text.
+</p>
+</dd>
+<dt> <code>.nolist</code></dt>
+<dd><p>      The following lines will not be visible in a listing file.
+</p>
+</dd>
+<dt> <code>.org &lt;exp&gt;</code></dt>
+<dd><p>      Defines the start address for the subsequent code.
+      When &lt;exp&gt; starts with a current-pc symbol and a plus (<code>+</code>)
+      operator, then the directive behaves like <code>.space</code>.
+</p>
+</dd>
+<dt> <code>.p2align &lt;bit_count&gt;[,&lt;fill&gt;][,&lt;maxpad&gt;]</code></dt>
+<dd><p>      Insert as much fill bytes as required to reach an address where
+      &lt;bit_count&gt; low order bits are zero. For example <code>.p2align 2</code> would
+      make an alignment to the next 32-bit boundary.
+      The padding bytes are initialized by &lt;fill&gt;, when given. The optional
+      third argument defines a maximum number of padding bytes to use. When
+      more are needed then the alignment is not done at all.
+</p>
+</dd>
+<dt> <code>.p2alignl &lt;bit_count&gt;[,&lt;fill&gt;][,&lt;maxpad&gt;]</code></dt>
+<dd><p>      Works like <code>.p2align</code>, with the only difference that the optional
+      fill value can be specified as a 32-bit word. Padding locations which
+      are not already 32-bit aligned, will cause a warning and padded by
+      zero-bytes.
+</p>
+</dd>
+<dt> <code>.p2alignw &lt;bit_count&gt;[,&lt;fill&gt;][,&lt;maxpad&gt;]</code></dt>
+<dd><p>      Works like <code>.p2align</code>, with the only difference that the optional
+      fill value can be specified as a 16-bit word. Padding locations which
+      are not already 16-bit aligned, will cause a warning and padded by
+      zero-bytes.
+</p>
+</dd>
+<dt> <code>.quad &lt;exp1&gt;[,&lt;exp2&gt;...]</code></dt>
+<dd><p>      If the current section location counter is not on a quadword
+      boundary, advance it to the next quadword boundary. Then, assign
+      the values of the operands into successive quadwords of memory in
+      the current section.
+</p>
+</dd>
+<dt> <code>.rept &lt;expression&gt;</code></dt>
+<dd><p>      Repeats the assembly of the block between <code>.rept</code> and <code>.endr</code>
+      &lt;expression&gt; number of times. &lt;expression&gt; has to be positive.
+</p>
+</dd>
+<dt> <code>.section &lt;name&gt;[,&quot;&lt;attributes&gt;&quot;]</code></dt>
+<dd><p>      Starts a new section named &lt;name&gt; or reactivate an old one. If
+      attributes are given for an already existing section, they must
+      match exactly. The section&rsquo;s name will also be defined as a new
+      symbol, which represents the section&rsquo;s start address.
+      The &quot;&lt;attributes&gt;&quot; string may consist of the following characters:
+</p>
+<p>      Section Contents:
+</p><dl compact="compact">
+<dt> <code>c</code> </dt>
+<dd><p>         section has code
+</p>
+</dd>
+<dt> <code>d</code> </dt>
+<dd><p>         section has initialized data
+</p>
+</dd>
+<dt> <code>u</code> </dt>
+<dd><p>         section has uninitialized data
+</p>
+</dd>
+<dt> <code>i</code> </dt>
+<dd><p>         section has directives (info section)
+</p>
+</dd>
+<dt> <code>n</code> </dt>
+<dd><p>         section can be discarded
+</p>            
+</dd>
+<dt> <code>R</code> </dt>
+<dd><p>         remove section at link time
+</p>            
+</dd>
+<dt> <code>a</code> </dt>
+<dd><p>         section is allocated in memory
+</p></dd>
+</dl>
+
+<p>      Section Protection:
+</p>
+<dl compact="compact">
+<dt> <code>r</code> </dt>
+<dd><p>         section is readable
+</p>            
+</dd>
+<dt> <code>w</code> </dt>
+<dd><p>         section is writable
+</p>           
+</dd>
+<dt>  <code>x</code> </dt>
+<dd><p>         section is executable
+</p>           
+</dd>
+<dt>  <code>s</code> </dt>
+<dd><p>         section is sharable
+</p></dd>
+</dl>
+
+<p>      Section Alignment: A digit, which is ignored. The assembler will
+      automatically align the section to the highest alignment restriction
+      used within.
+</p>
+<p>      Memory flags (Amiga hunk format only):
+</p>
+<dl compact="compact">
+<dt> <code>C</code> </dt>
+<dd><p>         load section to Chip RAM
+</p>           
+</dd>
+<dt>  <code>F</code> </dt>
+<dd><p>         load section to Fast RAM 
+</p>
+</dd>
+</dl>
+
+</dd>
+<dt> <code>.set &lt;symbol&gt;,&lt;expression&gt;</code></dt>
+<dd><p>      Create a new program symbol with the name &lt;symbol&gt; and assign to it
+      the value of &lt;expression&gt;. If &lt;symbol&gt; is already assigned, it will
+      contain a new value from now on.
+</p> 
+</dd>
+<dt> <code>.size &lt;symbol&gt;,&lt;size&gt;</code></dt>
+<dd><p>      Set the size in bytes of an object defined at &lt;symbol&gt;. 
+</p>
+</dd>
+<dt> <code>.short &lt;exp1&gt;[,&lt;exp2&gt;...]</code></dt>
+<dd><p>      See <code>.half</code>.
+</p>
+</dd>
+<dt> <code>.skip &lt;exp&gt;[,&lt;fill&gt;]</code></dt>
+<dd><p>      Insert &lt;exp&gt; zero or &lt;fill&gt; bytes into the current section.
+</p> 
+</dd>
+<dt> <code>.space &lt;exp&gt;[,&lt;fill&gt;]</code></dt>
+<dd><p>      Insert &lt;exp&gt; zero or &lt;fill&gt; bytes into the current section.
+</p>
+</dd>
+<dt> <code>.stabs &quot;&lt;name&gt;&quot;,&lt;type&gt;,&lt;other&gt;,&lt;desc&gt;,&lt;exp&gt;</code></dt>
+<dd><p>      Add an stab-entry for debugging, including a symbol-string and
+      an expression.
+</p>
+</dd>
+<dt> <code>.stabn &lt;type&gt;,&lt;other&gt;,&lt;desc&gt;,&lt;exp&gt;</code></dt>
+<dd><p>      Add an stab-entry for debugging, without a symbol-string.
+</p>
+</dd>
+<dt> <code>.stabd &lt;type&gt;,&lt;other&gt;,&lt;desc&gt;</code></dt>
+<dd><p>      Add an stab-entry for debugging, without symbol-string and value.
+</p>
+</dd>
+<dt> <code>.string &quot;&lt;string1&gt;&quot;[,&quot;&lt;string2&gt;&quot;...]</code></dt>
+<dd><p>      Like <code>.byte</code>, but adds a terminating zero-byte.
+</p>
+</dd>
+<dt> <code>.swbeg &lt;op&gt;</code></dt>
+<dd><p>      Just for compatibility. Do nothing.
+</p>
+</dd>
+<dt> <code>.type &lt;symbol&gt;,&lt;type&gt;</code></dt>
+<dd><p>      Set type of symbol called &lt;symbol&gt; to &lt;type&gt;, which must be one of:
+</p><dl compact="compact">
+<dt> <code>1: Object</code></dt>
+<dt> <code>2: Function</code></dt>
+<dt> <code>3: Section</code></dt>
+<dt> <code>4: File</code></dt>
+</dl>
+<p>      The predefined symbols <code>@object</code> and 
+        <code>@function</code> are available for
+      this purpose.
+</p> 
+</dd>
+<dt> <code>.uahalf &lt;exp1&gt;[,&lt;exp2&gt;...]</code></dt>
+<dd><p>      Assign the values of the operands into successive two-byte areas of
+      memory in the current section regardless of section alignment.
+</p> 
+</dd>
+<dt> <code>.ualong &lt;exp1&gt;[,&lt;exp2&gt;...]</code></dt>
+<dd><p>      See <code>.uaword</code>.
+</p>
+</dd>
+<dt> <code>.uaquad &lt;exp1&gt;[,&lt;exp2&gt;...]</code></dt>
+<dd><p>      Assign the values of the operands into successive eight-byte areas of
+      memory in the current section regardless of section alignment.
+</p>
+</dd>
+<dt> <code>.uashort &lt;exp1&gt;[,&lt;exp2&gt;...]</code></dt>
+<dd><p>      See <code>.uahalf</code>.
+</p> 
+</dd>
+<dt> <code>.uaword &lt;exp1&gt;[,&lt;exp2&gt;...]</code></dt>
+<dd><p>      Assign the values of the operands into successive four-byte areas
+      of memory in the current section regardless of section alignment.
+</p>
+</dd>
+<dt> <code>.weak &lt;symbol&gt;[,&lt;symbol&gt;...]</code></dt>
+<dd><p>      Flag &lt;symbol&gt; as a weak symbol, which means that &lt;symbol&gt; is
+      visible to all modules in the linking process and may be replaced
+      by any global symbol with the same name.
+      When a weak symbol remains undefined its value defaults to 0.
+</p> 
+</dd>
+<dt> <code>.word &lt;exp1&gt;[,&lt;exp2&gt;...]</code></dt>
+<dd><p>      If the current section location counter is not on a word boundary
+      advance it to the next word boundary. Then assign the values of the
+      operands into successive words of memory in the current section. 
+</p>
+</dd>
+<dt> <code>.zero &lt;exp&gt;[,&lt;fill&gt;]</code></dt>
+<dd><p>      Insert &lt;exp&gt; zero or &lt;fill&gt; bytes into the current section.
+</p>
+</dd>
+</dl>
+
+<p>Predefined section directives:
+</p><dl compact="compact">
+<dt> <code>.bss</code></dt>
+<dd><p>      .section &quot;.bss&quot;,&quot;aurw&quot;
+</p></dd>
+<dt> <code>.data</code></dt>
+<dd><p>      .section &quot;.data&quot;,&quot;adrw&quot;
+</p></dd>
+<dt> <code>.rodata</code></dt>
+<dd><p>      .section &quot;.rodata&quot;,&quot;adr&quot;
+</p></dd>
+<dt> <code>.sbss</code></dt>
+<dd><p>      .section &quot;.sbss&quot;,&quot;aurw&quot;
+</p></dd>
+<dt> <code>.sdata</code></dt>
+<dd><p>      .section &quot;.sdata&quot;,&quot;adrw&quot;
+</p></dd>
+<dt> <code>.sdata2</code></dt>
+<dd><p>      .section &quot;.sdata2&quot;,&quot;adr&quot;
+</p></dd>
+<dt> <code>.stab</code></dt>
+<dd><p>      .section &quot;.stab&quot;,&quot;dr&quot;
+</p></dd>
+<dt> <code>.stabstr</code></dt>
+<dd><p>      .section &quot;.stabstr&quot;,&quot;dr&quot;
+</p></dd>
+<dt> <code>.text</code></dt>
+<dd><p>      .section &quot;.text&quot;,&quot;acrx&quot;
+</p></dd>
+<dt> <code>.tocd</code></dt>
+<dd><p>      .section &quot;.tocd&quot;,&quot;adrw&quot;
+</p></dd>
+</dl>
+
+<hr size="6">
+<a name="Known-Problems-13"></a>
+<h2 class="section">3.5 Known Problems</h2>
+
+<p>    Some known problems of this module at the moment:
+</p>
+<ul class="toc">
+<li>- None.
+
+</li></ul>
+
+<hr size="6">
+<a name="Error-Messages-4"></a>
+<h2 class="section">3.6 Error Messages</h2>
+
+<p>This module has the following error messages:
+</p>
+<ul class="toc">
+<li>- 1001: mnemonic expected
+</li><li>- 1002: invalid extension
+</li><li>- 1003: no space before operands
+</li><li>- 1004: too many closing parentheses
+</li><li>- 1005: missing closing parentheses
+</li><li>- 1006: missing operand
+</li><li>- 1007: scratch at end of line
+</li><li>- 1008: \&quot; expected
+</li><li>- 1009: invalid data operand
+</li><li>- 1010: , expected
+</li><li>- 1011: identifier expected
+</li><li>- 1012: assembly aborted
+</li><li>- 1013: expression must be constant
+</li><li>- 1014: unexpected endm without macro
+</li><li>- 1015: endif without if
+</li><li>- 1016: if without endif
+</li><li>- 1017: maximum if-nesting depth exceeded (%d levels)
+</li><li>- 1018: else without if
+</li><li>- 1019: syntax error
+</li><li>- 1020: unexpected endr without rept
+</li><li>- 1021: symbol &lt;%s&gt; already defined with %s scope
+</li><li>- 1022: .fail %lld encountered
+</li><li>- 1023: .fail %lld encountered
+</li><li>- 1024: alignment too big
+
+</li></ul>
+
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#Standard-Syntax-Module" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="vasm_3.html#Mot-Syntax-Module" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="vasm_0.html#General-9" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="vasm_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[Index]</td>
+<td valign="middle" align="left">[<a href="vasm_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Luis Panadero Guardeño</em> on <em>January 13, 2015</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.82</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
+<html>
+<!-- Created on January 13, 2015 by texi2html 1.82
+texi2html was written by: 
+            Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+-->
+<head>
+<title>vasm manual: 15. c16x/st10 cpu module</title>
+
+<meta name="description" content="vasm manual: 15. c16x/st10 cpu module">
+<meta name="keywords" content="vasm manual: 15. c16x/st10 cpu module">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 1.82">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.smallquotation {font-size: smaller}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.roman {font-family:serif; font-weight:normal;}
+span.sansserif {font-family:sans-serif; font-weight:normal;}
+ul.toc {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="vasm_13.html#PowerPC-cpu-module" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="vasm_15.html#g_t6502-cpu-module" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="vasm_0.html#General-9" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="vasm_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[Index]</td>
+<td valign="middle" align="left">[<a href="vasm_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+
+<hr size="2">
+<a name="c16x_002fst10-cpu-module"></a>
+<a name="c16x_002fst10-cpu-module-1"></a>
+<h1 class="chapter">15. c16x/st10 cpu module</h1>
+<p>This chapter documents the Backend for the c16x/st10 microcontroller family.
+</p>
+<p>Note that this module is not yet fully completed!
+</p>
+<hr size="6">
+<a name="Legal-12"></a>
+<h2 class="section">15.1 Legal</h2>
+
+<p>    This module is copyright in 2002-2004 by Volker Barthelmann.
+</p>
+<p>    This archive may be redistributed without modifications and used
+    for non-commercial purposes.
+</p>
+<p>    Distributing modified versions and commercial usage needs my written
+    consent.
+</p>
+<p>    Certain modules may fall under additional copyrights.
+</p>
+
+<hr size="6">
+<a name="Additional-options-for-this-module-7"></a>
+<h2 class="section">15.2 Additional options for this module</h2>
+
+<p>This module provides the following additional options:
+</p>
+<dl compact="compact">
+<dt> &lsquo;<samp>-no-translations</samp>&rsquo;</dt>
+<dd><p>        Do not translate between jump instructions.
+        If the offset of a <code>jmpr</code>
+        instruction is too large, it will not be translated to
+        <code>jmps</code> but an error will be emitted.
+</p>
+<p>        Also, <code>jmpa</code> will not be optimized to <code>jmpr</code>.
+</p>
+<p>        The pseudo-instruction <code>jmp</code> will still be translated.
+</p>
+    </dd>
+<dt> &lsquo;<samp>-jmpa</samp>&rsquo;</dt>
+<dd><p>        A <code>jmp</code> or <code>jmpr</code> instruction that is translated due to
+        its offset being larger than 8 bits will be translated to a
+        <code>jmpa</code> rather than a <code>jmps</code>, if possible.
+</p>
+</dd>
+</dl>
+
+<hr size="6">
+<a name="General-7"></a>
+<h2 class="section">15.3 General</h2>
+
+<p>This backend accepts c16x/st10 instructions as described in the
+Infineon instruction set manuals.
+</p>
+<p>The target address type is 32bit.
+</p>
+<p>Default alignment for sections and instructions is 2 bytes.
+</p>
+<hr size="6">
+<a name="Extensions-4"></a>
+<h2 class="section">15.4 Extensions</h2>
+
+<p>This backend provides the following specific extensions:
+</p>
+<ul class="toc">
+<li>-
+There is a pseudo instruction <code>jmp</code> that will be translated
+        either to a <code>jmpr</code> or <code>jmpa</code> instruction, depending on
+        the offset.
+
+</li><li>-
+ The <code>sfr</code> pseudo opcode can be used to declare special function
+        registers. It has two, three of four arguments. The first argument
+        is the identifier to be declared as special function register.
+        The second argument is either the 16bit sfr address or its 8bit base
+        address (0xfe for normal sfrs and
+        0xf0 for extended special function registers). In the latter case,
+        the third argument is
+        the 8bit sfr number. If another argument is given, it specifies the
+        bit-number in the sfr (i.e. the declaration declares a single bit).
+
+<p>Example:
+</p><table><tr><td>&nbsp;</td><td><pre class="example">.sfr    zeros,0xfe,0x8e
+</pre></td></tr></table>
+
+</li><li>-
+        <code>SEG</code> and <code>SOF</code> can be used to obtain the segment or
+        segment offset of a full address.
+Example:
+<table><tr><td>&nbsp;</td><td><pre class="example">        mov r3,#SEG farfunc
+</pre></td></tr></table>
+
+</li></ul>
+
+<hr size="6">
+<a name="Optimizations-5"></a>
+<h2 class="section">15.5 Optimizations</h2>
+
+<p>This backend performs the following optimizations:
+</p>
+<ul class="toc">
+<li>-
+ <code>jmp</code> is translated to <code>jmpr</code>, if possible. Also, if
+        &lsquo;<samp>-no-translations</samp>&rsquo; was not specified, <code>jmpr</code> and
+        <code>jmpa</code> are translated.
+
+</li><li>- 
+ Relative jump instructions with an offset that does not fit into
+        8 bits are translated to a <code>jmps</code> instruction or an inverted
+        jump around a <code>jmps</code> instruction.
+
+</li><li>-
+ For instruction that have two forms <code>gpr,#IMM3/4</code> and
+        <code>reg,#IMM16</code> the smaller form is used, if possible.
+
+</li></ul>
+
+<hr size="6">
+<a name="Known-Problems-19"></a>
+<h2 class="section">15.6 Known Problems</h2>
+
+<p>    Some known problems of this module at the moment:
+</p>
+<ul class="toc">
+<li>- Lots...
+
+</li></ul>
+
+<hr size="6">
+<a name="Error-Messages-17"></a>
+<h2 class="section">15.7 Error Messages</h2>
+
+<p>This module has the following error messages:
+</p>
+<ul class="toc">
+<li>- 2001: illegal operand
+</li><li>- 2002: word register expected
+</li><li>- 2004: value does not find in %d bits
+</li><li>- 2005: data size not supported
+</li><li>- 2006: illegal use of SOF
+</li><li>- 2007: illegal use of SEG
+</li><li>- 2008: illegal use of DPP prefix
+</li></ul>
+
+<hr size="6">
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#c16x_002fst10-cpu-module" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="vasm_15.html#g_t6502-cpu-module" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="vasm_0.html#General-9" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="vasm_toc.html#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[Index]</td>
+<td valign="middle" align="left">[<a href="vasm_abt.html#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<p>
+ <font size="-1">
+  This document was generated by <em>Luis Panadero Guardeño</em> on <em>January 13, 2015</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.82</em></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>
