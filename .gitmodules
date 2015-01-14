@@ -1,3 +1,6 @@
 [submodule "SmallerC"]
 	path = SmallerC
 	url = git@github.com:alexfru/SmallerC.git
+[submodule "WaveAsm"]
+	path = WaveAsm
+	url = git@github.com:Meisaka/WaveAsm.git
