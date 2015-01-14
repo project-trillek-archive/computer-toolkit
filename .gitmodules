@@ -1,0 +1,3 @@
+[submodule "SmallerC"]
+	path = SmallerC
+	url = git@github.com:alexfru/SmallerC.git
