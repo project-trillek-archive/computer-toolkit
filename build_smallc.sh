@@ -2,9 +2,6 @@
 
 is64="$(uname -a | grep x86_64 | wc -l)"
 
-mkdir -p doc/vasm
-mkdir -p windows\ x32
-
 if (( "$is64" \> 0 )); then
   echo "64 bit system"
   mkdir -p ubuntu\ x64
@@ -16,7 +13,7 @@ git submodule init
 git submodule update
 
 cd SmallerC/v0100/
-gcc -Wall -Wextra -O2 smlrc.c -o smlrc
+gcc -Wall -Wextra -O2 -D TR3200 smlrc.c -o smlrc
 
 if (( "$is64" \> 0 )); then
   cp smlrc ../../ubuntu\ x64/
