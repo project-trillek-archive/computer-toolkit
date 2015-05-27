@@ -12,20 +12,20 @@ fi;
 git submodule init
 git submodule update
 
-cd SmallerC/v0100/
-gcc -Wall -Wextra -O2 -D TR3200 smlrc.c -o smlrc
+cd SmallerC
+make CPPFLAGS=-DTR3200 smlrc
 
 if (( "$is64" \> 0 )); then
-  cp smlrc ../../ubuntu\ x64/
+  cp smlrc ../ubuntu\ x64/
 else
-  cp smlrc ../../ubuntu\ x32/
+  cp smlrc ../ubuntu\ x32/
 fi;
 
-i586-mingw32msvc-gcc -Wall -Wextra -O2 smlrc.c -o smlrc.exe
-cp smlrc.exe ../../windows\ x32/
+make clean
+make CC=i686-w64-mingw32-gcc smlrc
+cp smlrc ../windows\ x32/
 
 echo "SmallerC Core compiled"
 
-cd ..
 cd ..
 
