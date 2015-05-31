@@ -42,6 +42,8 @@ SmallerC:
 vasm:
 	wget http://sun.hasenbraten.de/vasm/daily/vasm.tar.gz
 	tar -xvzf vasm.tar.gz
+	cd vasm && patch -p1 < ./patches/fix_rjmp.patch
+
 
 # Generate doc rules
 doc:

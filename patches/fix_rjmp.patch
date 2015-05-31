@@ -1,0 +1,21 @@
+diff -rupN vasm/cpus/tr3200/cpu.c toolkit/vasm/cpus/tr3200/cpu.c
+--- vasm/cpus/tr3200/cpu.c	2015-05-24 11:34:15.000000000 +0200
++++ vasm/cpus/tr3200/cpu.c	2015-05-26 20:44:45.577408110 +0200
+@@ -334,7 +334,7 @@ dblock *eval_instruction (instruction *p
+         eval_expr(rn->value, &val, sec, pc);
+         /* CALL/JUMP stuff */
+         if (m.ext.opcode >= 0x27 && m.ext.opcode <= 0x28 ) {
+-          val = val - pc; /* Relative jump/call */
++          val = val - pc -4; /* Relative jump/call (%pc has been increased )*/
+           val = val >> 2; /* CALL/JMP does a left shift of two bits */
+         } else if (m.ext.opcode >= 0x25 && m.ext.opcode <= 0x26 ) {
+           val = val >> 2; /* CALL/JMP does a left shift of two bits */
+@@ -351,7 +351,7 @@ dblock *eval_instruction (instruction *p
+         eval_expr(rn->value, &val, sec, pc);
+         /* CALL/JUMP stuff */
+         if (m.ext.opcode >= 0x27 && m.ext.opcode <= 0x28 ) {
+-          val = val - pc; /* Relative jump/call */
++          val = val - pc -4; /* Relative jump/call */
+         }
+ #ifdef INSTR_DEBUG
+     fprintf(stderr, "val %08x ", val);
