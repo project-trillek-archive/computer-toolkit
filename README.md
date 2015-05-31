@@ -3,9 +3,10 @@ Computer development tools for Trillek's computer
 
 ## Get it
 
-Download the tar.gz files for your operating system. doc.tgz contains documentation about both assembler
+Download the tar.gz files for your operating system. doc.tgz contains
+documentation about both assembler
 
-## Tools included 
+## Tools included
 
 - WaveAsm : Assembler
 - VASM : Assembler
@@ -13,12 +14,27 @@ Download the tar.gz files for your operating system. doc.tgz contains documentat
 - SmallerC core (smlc) : C compiler without preprocesor
 
 ## Build
-Use the Linux scripts to generate Linux 32/64 & Windows 32 binary files
+Simply do ```make```.
 
-To generate Windows binary files, is necesary to have installed ```i586-mingw32msvc-gcc```
+To generate Windows binary files (cross-compile), is necesary to have installed
+mingw32 and launch make with the apropiated CC value. For example
+```make CC=i686-w64-mingw32-gcc```
+**WARNING** : Cross-compile looks that is broken on Ubuntu 15.04
 
-## TODO                                                                           
 
-- Docs and example of how use all                                              
- - Ubuntu x32 binaries                                                          
- - Mac OS X binaries                                                            
+### Install
+```sudo make install``` would install in your system :
+
+- vasm-tr3200
+- vlink
+- smlrc-tr3200
+
+## How use the toolchain
+Preliminar documentation and examples resides on Trillek wiki : http://wiki.trillek.org/wiki/VASM
+
+## TODO
+
+- Generate Ubuntu x32 binaries
+- Generate Mac OS X binaries
+- Install WaveAsm
+
