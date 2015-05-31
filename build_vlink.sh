@@ -13,8 +13,9 @@ fi;
 
 wget http://sun.hasenbraten.de/vlink/daily/vlink.tar.gz
 tar -xvzf vlink.tar.gz
-cp vlink_makefilewin32 ./vlink/Makefile.Win32FromLinux
-cd vlink
+mv vlink vlink_src
+cp vlink_makefilewin32 ./vlink_src/Makefile.Win32FromLinux
+cd vlink_src
 mkdir obj_win32
 make -f Makefile
 make -f Makefile.Win32FromLinux
