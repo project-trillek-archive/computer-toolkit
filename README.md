@@ -18,8 +18,9 @@ Simply do ```make```.
 
 To generate Windows binary files (cross-compile), is necesary to have installed
 mingw32 and launch make with the apropiated CC value. For example
-```make CC=i686-w64-mingw32-gcc```
-**WARNING** : Cross-compile looks that is broken on Ubuntu 15.04
+```make CC=i686-w64-mingw32-gcc``` or ```make CC=i586-mingw32msvc-gcc```
+
+**WARNING** : Cross-compile looks that is broken on Ubuntu 15.04, we are looking how to fix it.
 
 
 ### Install
