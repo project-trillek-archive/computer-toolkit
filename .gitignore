@@ -1,0 +1,28 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# VStudio & Windows stuff
+*.sln
+*.suo
+*.vcxproj
+*.vcxproj.filters
+*.dir
+*.sdf
+*.exe
+
+# vim/kate/nano backup files
+*.swp
+*.*~
+

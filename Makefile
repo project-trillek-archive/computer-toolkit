@@ -1,4 +1,5 @@
 RM := rm
+TARGETEXTENSION :=
 
 INSTALL := install
 INSTALLDATA := install -m 644
@@ -32,7 +33,7 @@ vlink_src:
 	wget http://sun.hasenbraten.de/vlink/daily/vlink.tar.gz
 	tar -xvzf vlink.tar.gz
 	mv vlink vlink_src
-	cp vlink_makefilewin32 ./vlink_src/Makefile.Win32FromLinux
+#	cp vlink_makefilewin32 ./vlink_src/Makefile.Win32FromLinux
 
 git_submodule:
 	git submodule init
@@ -42,13 +43,15 @@ git_submodule:
 vasm:
 	wget http://sun.hasenbraten.de/vasm/daily/vasm.tar.gz
 	tar -xvzf vasm.tar.gz
-	cd vasm && patch -p1 < ../patches/fix_rjmp.patch
+#	cd vasm && patch -p1 < ../patches/fix_rjmp.patch
 
 
 # Generate doc rules
 doc:
 	cd vasm && make -f Makefile doc/vasm.html
 	mv vasm/doc/*.html ./doc/vasm/
+	cd vlink_src && make -f Makefile vlink.html
+	mv vlink_src/vlink.html ./doc/
 
 # Install rules
 install: all
