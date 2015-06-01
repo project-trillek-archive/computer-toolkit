@@ -33,7 +33,10 @@ Also, you can generate documentation files of vasm and vlink with ```make doc```
 - WaveAsm
 
 ## How use the toolchain
-Preliminar documentation and examples resides on Trillek wiki : http://wiki.trillek.org/wiki/VASM
+Preliminar documentation and examples resides on Trillek wiki :
+
+- http://wiki.trillek.org/wiki/VASM
+- http://wiki.trillek.org/wiki/SmallerC
 
 ## TODO
 
