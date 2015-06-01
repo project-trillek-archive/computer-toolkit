@@ -4,7 +4,7 @@ Computer development tools for Trillek's computer v0.2.0
 ## Get it
 
 Download the tar.gz files for your operating system. doc.tgz contains
-documentation about both assembler
+documentation about both assemblers and vlink.
 
 ## Tools included
 
