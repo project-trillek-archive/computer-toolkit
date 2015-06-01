@@ -10,12 +10,12 @@ binprefix =
 # The directory to install tar in.
 bindir = $(prefix)/bin
 
-.PHONY: clean doc install
+.PHONY: clean doc install git_submodule
 
 # Compile rules
 all: smlrc-tr3200 vlink vasm-tr3200
 
-smlrc-tr3200: SmallerC
+smlrc-tr3200:
 	cd SmallerC && make CPPFLAGS=-DTR3200 smlrc
 	mv SmallerC/smlrc smlrc-tr3200
 
@@ -34,7 +34,7 @@ vlink_src:
 	mv vlink vlink_src
 	cp vlink_makefilewin32 ./vlink_src/Makefile.Win32FromLinux
 
-SmallerC:
+git_submodule:
 	git submodule init
 	git submodule update
 	cd SmallerC && ./configure
@@ -61,5 +61,7 @@ clean:
 	$(RM) -f smlrc-tr3200
 	cd SmallerC && make clean
 	$(RM) -f vlink
+	$(RM) -f vlink_src/objects/*.o
 	$(RM) -f vasm-tr3200
 	cd vasm && make clean
+	$(RM) -f vasm/obj/*.o
