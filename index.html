@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <title>Computer-toolkit by trillek-team</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Computer-toolkit</h1>
+        <h2>Trillek Computer development tools</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/trillek-team/computer-toolkit/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/trillek-team/computer-toolkit/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/trillek-team/computer-toolkit" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a id="trillek-computer-toolkit" class="anchor" href="#trillek-computer-toolkit" aria-hidden="true"><span class="octicon octicon-link"></span></a>Trillek Computer Toolkit</h1>
+
+<p>Computer development tools for Trillek's computer v0.2.0</p>
+
+<h2>
+<a id="get-it" class="anchor" href="#get-it" aria-hidden="true"><span class="octicon octicon-link"></span></a>Get it</h2>
+
+<p>Download the tar.gz files for your operating system. doc.tgz contains
+documentation about both assemblers and vlink.</p>
+
+<h2>
+<a id="tools-included" class="anchor" href="#tools-included" aria-hidden="true"><span class="octicon octicon-link"></span></a>Tools included</h2>
+
+<p>This consists on a selection an agrupation of TR3200 computer development tools, that are :</p>
+
+<ul>
+<li>WaveAsm : An simple and straightforward assembler for TR3200 and other cpus.</li>
+<li>VASM : A powerful macro-assembler that can generate object files or raw binary files.</li>
+<li>VLINK : Linker paired with VASM to generate raw binary files with the final code.</li>
+<li>SmallerC Compiler core : SmallerC allows to compile C code and generate assembly files to feed VASM.</li>
+</ul>
+
+<h2>
+<a id="build" class="anchor" href="#build" aria-hidden="true"><span class="octicon octicon-link"></span></a>Build</h2>
+
+<p>Simply do :
+1. <code>make git_submodule</code> to initiate git submodules
+2. <code>make</code> to build it</p>
+
+<p>To generate Windows binary files (cross-compile), is necesary to have installed
+mingw32 and launch make with the apropiated CC value. For example
+<code>make CC=i686-w64-mingw32-gcc LD=i686-w64-mingw32-gcc BINEXT=.exe</code> or <code>make CC=i586-mingw32msvc-gcc LD=i586-mingw32msvc-gcc BINEXT=.exe</code></p>
+
+<p>Also, you can generate documentation files of vasm and vlink with <code>make doc</code></p>
+
+<h3>
+<a id="install" class="anchor" href="#install" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install</h3>
+
+<p><code>sudo make install</code> would install in your system :</p>
+
+<ul>
+<li>vasm-tr3200</li>
+<li>vlink</li>
+<li>smlrc-tr3200</li>
+<li>WaveAsm</li>
+</ul>
+
+<h2>
+<a id="how-use-the-toolchain" class="anchor" href="#how-use-the-toolchain" aria-hidden="true"><span class="octicon octicon-link"></span></a>How use the toolchain</h2>
+
+<p>Preliminar documentation and examples resides on Trillek wiki :</p>
+
+<ul>
+<li><a href="http://wiki.trillek.org/wiki/WaveAsm">http://wiki.trillek.org/wiki/WaveAsm</a></li>
+<li><a href="http://wiki.trillek.org/wiki/VASM">http://wiki.trillek.org/wiki/VASM</a></li>
+<li><a href="http://wiki.trillek.org/wiki/SmallerC">http://wiki.trillek.org/wiki/SmallerC</a></li>
+</ul>
+
+<h2>
+<a id="todo" class="anchor" href="#todo" aria-hidden="true"><span class="octicon octicon-link"></span></a>TODO</h2>
+
+<ul>
+<li>Generate Ubuntu x32 binaries</li>
+<li>Generate Mac OS X binaries</li>
+</ul>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
