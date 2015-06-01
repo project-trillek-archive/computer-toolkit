@@ -1,7 +1,7 @@
 RM := rm
 
 INSTALL := install
-INSTALLDATA := install -m 644
+INSTALLDATA := install -D -m 644
 
 prefix = /usr/local
 # Prefix for each installed program,
@@ -9,6 +9,7 @@ prefix = /usr/local
 binprefix =
 # The directory to install tar in.
 bindir = $(prefix)/bin
+datadir = $(prefix)/share
 # Binary output extension
 BINEXT :=
 
@@ -61,6 +62,8 @@ install: all
 	$(INSTALL) smlrc-tr3200 $(bindir)/$(binprefix)smlrc-tr3200
 	$(INSTALL) vasm-tr3200 $(bindir)/$(binprefix)vasm-tr3200
 	$(INSTALL) vlink $(bindir)/$(binprefix)vlink
+	$(INSTALL) ./WaveAsm/WaveAsm.pl $(bindir)/$(binprefix)WaveAsm.pl
+	$(INSTALLDATA) ./WaveAsm/tr3200.isf $(datadir)/WaveAsm/tr3200.isf
 
 # Clean rules
 clean:

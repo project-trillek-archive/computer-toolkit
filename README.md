@@ -30,6 +30,7 @@ Also, you can generate documentation files of vasm and vlink with ```make doc```
 - vasm-tr3200
 - vlink
 - smlrc-tr3200
+- WaveAsm
 
 ## How use the toolchain
 Preliminar documentation and examples resides on Trillek wiki : http://wiki.trillek.org/wiki/VASM
@@ -38,5 +39,4 @@ Preliminar documentation and examples resides on Trillek wiki : http://wiki.tril
 
 - Generate Ubuntu x32 binaries
 - Generate Mac OS X binaries
-- Install WaveAsm
 
