@@ -1,5 +1,5 @@
 # Trillek Computer Toolkit
-Computer development tools for Trillek's computer
+Computer development tools for Trillek's computer v0.2.0
 
 ## Get it
 
@@ -20,10 +20,9 @@ Simply do :
 
 To generate Windows binary files (cross-compile), is necesary to have installed
 mingw32 and launch make with the apropiated CC value. For example
-```make CC=i686-w64-mingw32-gcc LD=i686-w64-mingw32-gcc``` or ```make CC=i586-mingw32msvc-gcc LD=i586-mingw32msvc-gcc```
+```make CC=i686-w64-mingw32-gcc LD=i686-w64-mingw32-gcc BINEXT=.exe``` or ```make CC=i586-mingw32msvc-gcc LD=i586-mingw32msvc-gcc BINEXT=.exe```
 
-**WARNING** : Cross-compile looks that is broken on Ubuntu 15.04, we are looking how to fix it.
-
+Also, you can generate documentation files of vasm and vlink with ```make doc```
 
 ### Install
 ```sudo make install``` would install in your system :

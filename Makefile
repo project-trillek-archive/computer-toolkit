@@ -1,5 +1,4 @@
 RM := rm
-TARGETEXTENSION :=
 
 INSTALL := install
 INSTALLDATA := install -m 644
@@ -10,23 +9,25 @@ prefix = /usr/local
 binprefix =
 # The directory to install tar in.
 bindir = $(prefix)/bin
+# Binary output extension
+BINEXT :=
 
 .PHONY: clean doc install git_submodule
 
 # Compile rules
-all: smlrc-tr3200 vlink vasm-tr3200
+all: smlrc-tr3200${BINEXT} vlink${BINEXT} vasm-tr3200${BINEXT}
 
-smlrc-tr3200:
+smlrc-tr3200${BINEXT}:
 	cd SmallerC && make CPPFLAGS=-DTR3200 smlrc
-	mv SmallerC/smlrc smlrc-tr3200
+	mv SmallerC/smlrc smlrc-tr3200${BINEXT}
 
-vlink: vlink_src
+vlink${BINEXT}: vlink_src
 	cd vlink_src && make -f Makefile
-	mv vlink_src/vlink .
+	mv vlink_src/vlink vlink${BINEXT}
 
-vasm-tr3200: vasm
+vasm-tr3200${BINEXT}: vasm
 	cd vasm && make -f Makefile CPU=tr3200 SYNTAX=oldstyle
-	mv vasm/vasmtr3200_oldstyle vasm-tr3200
+	mv vasm/vasmtr3200_oldstyle vasm-tr3200${BINEXT}
 
 # Grab source code
 vlink_src:
@@ -48,10 +49,12 @@ vasm:
 
 # Generate doc rules
 doc:
+	mkdir -p ./doc/vasm
+	mkdir -p ./doc/vlink
 	cd vasm && make -f Makefile doc/vasm.html
 	mv vasm/doc/*.html ./doc/vasm/
 	cd vlink_src && make -f Makefile vlink.html
-	mv vlink_src/vlink.html ./doc/
+	mv vlink_src/*.html ./doc/vlink/
 
 # Install rules
 install: all
@@ -61,10 +64,10 @@ install: all
 
 # Clean rules
 clean:
-	$(RM) -f smlrc-tr3200
+	$(RM) -f smlrc-tr3200${BINEXT}
 	cd SmallerC && make clean
-	$(RM) -f vlink
+	$(RM) -f vlink${BINEXT}
 	$(RM) -f vlink_src/objects/*.o
-	$(RM) -f vasm-tr3200
+	$(RM) -f vasm-tr3200${BINEXT}
 	cd vasm && make clean
 	$(RM) -f vasm/obj/*.o
