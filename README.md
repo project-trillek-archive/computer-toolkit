@@ -11,7 +11,7 @@ documentation about both assemblers and vlink.
 - WaveAsm : Assembler
 - VASM : Assembler
 - VLINK : Linker for VASM vobj files
-- SmallerC core (smlc) : C compiler without preprocesor
+- SmallerC core (smlc) : Tiny C compiler 
 
 ## Build
 Simply do :
